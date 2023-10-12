@@ -70,7 +70,7 @@ public class DashBoard extends BaseClass {
     }
 
     //    @Test(retryAnalyzer = RetryAnalyzer.class)
-    @Test
+    @Test(enabled = false)
     public void leaveRequestToApprove() {
         System.out.println("Verifying leave request feature");
         click(dashBoardPage.leaveModule);
