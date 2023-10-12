@@ -1,6 +1,7 @@
 package com.orangehrm_automation.utility;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -11,9 +12,13 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestResult;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -188,6 +193,30 @@ public abstract class BaseClass {
             e.printStackTrace();
         }
 
+    }
+    public void captureScreenShot(ITestResult result,WebDriver driver) {
+
+        String reportPath=null;
+        LocalDateTime dateTime = LocalDateTime.now();
+        String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_mm_yyyy_hh_mm"));
+        reportPath = System.getProperty("user.dir") + "/reports/" + "report_" + currentDateTime;
+        System.out.println("ReportPath is " + reportPath);
+        File file = new File(reportPath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+
+        String screenShot = reportPath + "/" + result.getMethod().getMethodName() + ".jpg";
+        TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+        File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+        File destinationFile = new File(screenShot);
+
+        try {
+            FileUtils.copyFile(sourceFile, destinationFile);
+        } catch (IOException e) {
+            // e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 

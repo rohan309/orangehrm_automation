@@ -19,6 +19,7 @@ public class Leave extends BaseClass {
     public void beforeClass() {
         propertyHandling = new PropertyHandling();
         launchBrowser(propertyHandling.getProperties("browser"));
+
     }
 
     @AfterClass

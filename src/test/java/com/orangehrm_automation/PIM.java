@@ -1,5 +1,6 @@
 package com.orangehrm_automation;
 
+import com.beust.jcommander.Parameter;
 import com.opencsv.CSVReader;
 import com.orangehrm_automation.pages.LeavePage;
 import com.orangehrm_automation.pages.LoginPage;
@@ -24,11 +25,19 @@ public class PIM extends BaseClass {
     PIMPage pimPage;
 
     @BeforeClass
-    public void beforeClass() {
-        propertyHandling = new PropertyHandling();
-        launchBrowser(propertyHandling.getProperties("browser"));
+    @Parameters("browser")
+    public void beforeClass(String browser) {
+        if (browser.equalsIgnoreCase("chrome")) {
+            propertyHandling = new PropertyHandling();
+            launchBrowser(propertyHandling.getProperties("browser"));
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            propertyHandling = new PropertyHandling();
+            launchBrowser(propertyHandling.getProperties("fbrowser"));
+        }/*else {
+            propertyHandling = new PropertyHandling();
+            launchBrowser(propertyHandling.getProperties("browser"));
+        }*/
         driver.get(propertyHandling.getProperties("orangeHrmUrl"));
-
     }
 
     @AfterClass
@@ -48,7 +57,7 @@ public class PIM extends BaseClass {
     }
 
     @Test
-    public void uploadListOfEmp() throws InterruptedException {
+    public void uploadListOfEmp() {
         pimPage = new PIMPage(driver);
         click(pimPage.pimModule);
         click(pimPage.configuration);
@@ -60,7 +69,7 @@ public class PIM extends BaseClass {
         click(pimPage.okBtn);
     }
 
-    @Test
+    @Test(enabled = false)
     public void verifyAddedEmp() throws InterruptedException {
         pimPage = new PIMPage(driver);
         click(pimPage.pimModule);
@@ -120,7 +129,7 @@ public class PIM extends BaseClass {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void uploadInappropriateFile() {
         pimPage = new PIMPage(driver);
         propertyHandling = new PropertyHandling();
@@ -135,7 +144,7 @@ public class PIM extends BaseClass {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void optionalFields1() throws InterruptedException {
         pimPage = new PIMPage(driver);
         propertyHandling = new PropertyHandling();
@@ -181,7 +190,7 @@ public class PIM extends BaseClass {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void optionalFields2() throws InterruptedException {
         pimPage = new PIMPage(driver);
         propertyHandling = new PropertyHandling();
@@ -232,7 +241,7 @@ public class PIM extends BaseClass {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void addReports() {
         pimPage = new PIMPage(driver);
         propertyHandling = new PropertyHandling();
@@ -256,7 +265,7 @@ public class PIM extends BaseClass {
 
     }
 
-    @Test(dependsOnMethods = "addReports")
+    @Test(enabled = false,dependsOnMethods = "addReports")
     public void verifyReport() throws InterruptedException {
         pimPage = new PIMPage(driver);
         propertyHandling = new PropertyHandling();

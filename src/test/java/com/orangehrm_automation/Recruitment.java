@@ -11,10 +11,20 @@ public class Recruitment extends BaseClass {
     PropertyHandling propertyHandling;
 
     @BeforeClass
-    public void beforeClass() {
-        propertyHandling = new PropertyHandling();
-        String browser = propertyHandling.getProperties("browser");
-        launchBrowser(browser);
+    @Parameters("browser")
+    public void beforeClass(String browser) {
+
+        if (browser.equalsIgnoreCase("chrome")) {
+            propertyHandling = new PropertyHandling();
+            launchBrowser(propertyHandling.getProperties("fbrowser"));
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            propertyHandling = new PropertyHandling();
+            launchBrowser(propertyHandling.getProperties("ebrowser"));
+        } /*else {
+            propertyHandling = new PropertyHandling();
+            launchBrowser(propertyHandling.getProperties("browser"));
+        }*/
+        driver.get(propertyHandling.getProperties("orangeHrmUrl"));
     }
 
     @AfterClass
@@ -30,13 +40,12 @@ public class Recruitment extends BaseClass {
     }
 
     @AfterMethod
-    public void afterMethod() throws InterruptedException {
-        Thread.sleep(5000);
+    public void afterMethod() {
         driver.close();
     }
 
     @Test
-    public void test() {
+    public void addRecruitement() {
         RecruitmentPage recruitmentPage = new RecruitmentPage(driver);
         click(recruitmentPage.recruitmentModule);
         click(recruitmentPage.addButton);
@@ -52,7 +61,7 @@ public class Recruitment extends BaseClass {
         click(recruitmentPage.saveButton);
 
         waitForElementToBeVisible(recruitmentPage.savedMsg);
-        String text=driver.findElement(recruitmentPage.savedMsg).getText();
+        String text = driver.findElement(recruitmentPage.savedMsg).getText();
         Assert.assertEquals(text, propertyHandling.getProperties("savedMsg"), "Assertion failed: Test case didn't pass.");
 
 
