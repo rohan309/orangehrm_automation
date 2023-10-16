@@ -145,7 +145,7 @@ public abstract class BaseClass {
 
     public void scrollToElement(WebDriver driver, By elementToScrollTo) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(elementToScrollTo));
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(elementToScrollTo));
 
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
         jsExecutor.executeScript("arguments[0].scrollIntoView(true);", element);
@@ -159,20 +159,21 @@ public abstract class BaseClass {
 
     }
 
-    public void dropDown(By dD,By by, String textToSelect){
+    public void dropDown(By dD, By by, String textToSelect) {
         click(dD);
         waitForElementToBeVisible(by);
-        List<WebElement> elements=driver.findElements(by);
-        for (WebElement ele:elements) {
-            if (ele.getText().equals(textToSelect)){
+        List<WebElement> elements = driver.findElements(by);
+        for (WebElement ele : elements) {
+            if (ele.getText().equals(textToSelect)) {
                 ele.click();
                 break;
-            }else {
+            } else {
                 throw new RuntimeException("Expected element not found");
             }
         }
 
     }
+
     public void selectFromDropDown(By by) {
         click(by);
         List<WebElement> webElements = driver.findElements(by);
@@ -194,19 +195,45 @@ public abstract class BaseClass {
         }
 
     }
-    public void captureScreenShot(ITestResult result,WebDriver driver) {
 
-        String reportPath=null;
+    public void captureScreenshot(ITestResult result, WebDriver driver,String path) {
+        /*String screenshotPath = null;
         LocalDateTime dateTime = LocalDateTime.now();
-        String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_mm_yyyy_hh_mm"));
-        reportPath = System.getProperty("user.dir") + "/reports/" + "report_" + currentDateTime;
-        System.out.println("ReportPath is " + reportPath);
-        File file = new File(reportPath);
-        if (!file.exists()) {
-            file.mkdir();
+        String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss_SSS"));
+        screenshotPath = System.getProperty("user.dir") + "/reports/" +"/screenshot_"+ currentDateTime ;
+
+        System.out.println("Screenshot path is " + screenshotPath);
+
+        File directory = new File(screenshotPath);
+        if (!directory.exists()) {
+            *//*if (directory.mkdirs()) {
+                System.out.println("Report directory created.");
+            } else {
+                System.out.println("Failed to create report directory.");
+                return;
+            }*//*
+            directory.mkdir();
+            System.out.println("Directory created : "+screenshotPath);
+        }else {
+            System.out.println("Directory already exist");
         }
 
-        String screenShot = reportPath + "/" + result.getMethod().getMethodName() + ".jpg";
+        screenshotPath = screenshotPath + "/" + result.getMethod().getMethodName() + ".jpg";
+        TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+        File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+        File destinationFile = new File(screenshotPath);
+
+        try {
+            FileUtils.copyFile(sourceFile, destinationFile);
+            System.out.println("Screenshot saved at: " + screenshotPath);
+        } catch (IOException e) {
+            System.err.println("Failed to capture screenshot: " + e.getMessage());
+            e.printStackTrace();
+        }*/
+        /*LocalDateTime dateTime = LocalDateTime.now();
+        String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss_SSS"));
+        String reportPath = System.getProperty("user.dir") + "/reports/" + "report_" + currentDateTime;
+        String screenShot = path + "/" + result.getMethod().getMethodName() +".jpg";
         TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
         File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
         File destinationFile = new File(screenShot);
@@ -214,11 +241,24 @@ public abstract class BaseClass {
         try {
             FileUtils.copyFile(sourceFile, destinationFile);
         } catch (IOException e) {
-            // e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+            // e.printStackTrace(); throw new RuntimeException(e);
+        }*/
     }
 
-
+    public void takeScreenshot(String methodName) {
+        try {
+            TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+            File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+            String screenshotName = methodName + ".png";
+            File destinationFile = new File("screenshots/" + screenshotName);
+            FileUtils.copyFile(sourceFile, destinationFile);
+            System.out.println("Screenshot captured and saved at: " + destinationFile.getAbsolutePath());
+        } catch (Exception e) {
+            System.err.println("Failed to capture screenshot: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
+
+
 

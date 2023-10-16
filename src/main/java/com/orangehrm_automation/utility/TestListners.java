@@ -3,9 +3,13 @@ package com.orangehrm_automation.utility;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.testng.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,7 +22,7 @@ public class TestListners extends BaseClass implements ITestListener, ISuiteList
     public void onStart(ISuite suite) {
         System.out.println("This is onStart of ISuite from TestListners");
         LocalDateTime dateTime = LocalDateTime.now();
-        String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm"));
+        String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss_SSS"));
         reportPath = System.getProperty("user.dir") + "/reports/" + "report_" + currentDateTime;
         System.out.println("ReportPath is " + reportPath);
         File file = new File(reportPath);
@@ -90,10 +94,40 @@ public class TestListners extends BaseClass implements ITestListener, ISuiteList
 
     @Override
     public void onTestFailure(ITestResult result) {
-        captureScreenShot(result, driver);
-        log.fail(result.getThrowable().getMessage());
+        System.out.println("Test case fail : " + result.getName());
+
+        /*log.fail(result.getThrowable().getMessage());
         String screenShotPath = reportPath + "/" + result.getMethod().getMethodName() + ".jpg";
         log.addScreenCaptureFromPath(screenShotPath, "Failed screenshot");
+//        takeScreenshot(result.getName());
+        captureScreenshot(result, driver, reportPath);*/
+        /*String screenShot = reportPath + "/" + result.getMethod().getMethodName() + ".jpg";
+        TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+        File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+        File destinationFile = new File(screenShot);
+
+        try {
+            FileUtils.copyFile(sourceFile, destinationFile);
+        } catch (IOException e) {
+            // e.printStackTrace(); throw new RuntimeException(e);
+        }*/
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+            File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+            String screenshotName = result.getName() + "_failure.png";
+            File destinationFile = new File(reportPath+"/screenshots/" + screenshotName);
+            FileUtils.copyFile(sourceFile, destinationFile);
+            System.out.println("Screenshot captured and saved at: " + destinationFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to capture screenshot: " + e.getMessage());
+        }
     }
 
     @Override

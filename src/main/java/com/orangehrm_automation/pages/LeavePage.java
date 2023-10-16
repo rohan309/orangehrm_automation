@@ -18,4 +18,6 @@ public class LeavePage extends BaseClass {
     public By yearDropDown=By.xpath("//ul[@class='oxd-calendar-selector']/li[2]//i");
     public By monthDropDown=By.xpath("//ul[@class='oxd-calendar-selector']/li[1]//i");
     public By dateTable=By.xpath("//div[@class='oxd-calendar-date']");
+    public By successMsg = By.xpath("//p[text()='Successfully Saved']");
+    public By applyBtn=By.xpath("//button[@type='submit']");
 }

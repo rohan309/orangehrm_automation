@@ -48,8 +48,15 @@ public class PIMPage extends BaseClass {
     public By searchReport=By.xpath("//input[@placeholder='Type for hints...']");
     public By reoprtFound=By.xpath("//div[@class='oxd-table-card']/div/div[2]/div");
     public By searchBtn=By.xpath("//button[text()=' Search ']");
-
-
+    public  By empImage=By.xpath("//div[@class='orangehrm-edit-employee-image']/img");
+//    public By qualificationOption =By.xpath("//a[text()='Qualifications']");
+    //
+    public By qualificationTab =By.xpath("//div[@role='tablist']/div[10]");
+    public By addSkill=By.xpath("//div[@class='orangehrm-edit-employee']/div[2]/div[4]//button/i");
+    public By skillsTextField=By.xpath("//div[@class='oxd-select-text--after']/i");
+    public By skillsDropDown=By.xpath("//div[@role='listbox']/div/span");
+    public By salaryTab=By.xpath("//a[text()='Salary']");
+    public By dependents=By.xpath("//a[text()='Dependents']");
 
 
 }

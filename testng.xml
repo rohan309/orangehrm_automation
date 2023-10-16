@@ -8,17 +8,24 @@
     </listeners>
 
     <test name="Sample_Test1" parallel="classes" thread-count="2">
-        <parameter name="browser" value="chrome"></parameter>
+        <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.orangehrm_automation.PIM"/>
+            <class name="com.orangehrm_automation.LoginTest"/>
         </classes>
     </test>
 
     <test name="Sample_Test2" parallel="classes" thread-count="2">
-        <parameter name="browser" value="firefox"></parameter>
+        <parameter name="browser" value="firefox"/>
         <classes>
             <class name="com.orangehrm_automation.Recruitment">
             </class>
+        </classes>
+    </test>
+    <test name="Login">
+        <classes>
+            <class name="com.orangehrm_automation.LoginTest"/>
+            <class name="com.orangehrm_automation.Admin"/>
         </classes>
     </test>
 

@@ -6,6 +6,7 @@ import com.orangehrm_automation.utility.BaseClass;
 import com.orangehrm_automation.utility.PropertyHandling;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.util.List;
@@ -49,8 +50,9 @@ public class Leave extends BaseClass {
 
         selectDate(leavePage.fromDate, propertyHandling.getProperties("leaveFromDate"));
 
-
-        Thread.sleep(3000);
+        click(leavePage.applyBtn);
+        waitForElementToBeVisible(leavePage.successMsg);
+        Assert.assertTrue(driver.findElement(leavePage.successMsg).isDisplayed());
     }
 
     public void selectDate(By by, String date) {
