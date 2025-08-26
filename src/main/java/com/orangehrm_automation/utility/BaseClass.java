@@ -91,7 +91,8 @@ public abstract class BaseClass {
         }
     }
 
-    public void waitForElementTobeClickable(WebElement element) {
+    public void waitForElementTobeClickable(By by) {
+        WebElement element=driver.findElement(by);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
@@ -108,7 +109,7 @@ public abstract class BaseClass {
 
     public void selectDate(By calIcon, By table, int day) {
         WebElement calender = driver.findElement(calIcon);
-        waitForElementTobeClickable(calender);
+        waitForElementTobeClickable(calIcon);
         calender.click();
         List<WebElement> allDates = driver.findElements(table);
         for (WebElement element : allDates) {
@@ -123,9 +124,9 @@ public abstract class BaseClass {
         }
     }
 
-    public void scrollToElement(WebDriver driver, By elementToScrollTo) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(elementToScrollTo));
+    public void scrollToElement(By elementToScrollTo) {
+
+        WebElement element = driver.findElement(elementToScrollTo);
 
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
         jsExecutor.executeScript("arguments[0].scrollIntoView(true);", element);
