@@ -2,10 +2,10 @@ package com.orangehrm_automation.utility;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.testng.*;
 
 import java.io.File;
@@ -13,129 +13,118 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class TestListners extends BaseClass implements ITestListener, ISuiteListener {
-    String reportPath;
-    ExtentReports extentReporter;
-    ExtentTest log;
+public class TestListners implements ITestListener, ISuiteListener {
 
     @Override
     public void onStart(ISuite suite) {
         System.out.println("This is onStart of ISuite from TestListners");
-        LocalDateTime dateTime = LocalDateTime.now();
-        String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss_SSS"));
-        reportPath = System.getProperty("user.dir") + "/reports/" + "report_" + currentDateTime;
-        System.out.println("ReportPath is " + reportPath);
-        File file = new File(reportPath);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        String htmlReport = reportPath + "/AutomationReport.html";
-        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(htmlReport);
-        extentReporter = new ExtentReports();
-        extentReporter.attachReporter(sparkReporter);
-
-        extentReporter.setSystemInfo("user", "Rohan More");
-        extentReporter.setSystemInfo("os", "windows");
-        extentReporter.setSystemInfo("environment", "QA");
-        String suiteName = suite.getName();
-        System.out.println(suiteName);
-
     }
 
     @Override
     public void onFinish(ISuite suite) {
         System.out.println("This is onFinish of ISuite from TestListners");
-        extentReporter.flush();
-
     }
 
     @Override
     public void onStart(ITestContext context) {
         System.out.println("This is onStart of ITestContext from TestListners");
-
     }
 
     @Override
     public void onFinish(ITestContext context) {
         System.out.println("This is onFinish of ITestContest from TestListners");
-
-
+        ExtentTestManager.endTest();
     }
 
     @Override
     public void onTestStart(ITestResult result) {
         System.out.println("This is onTestStart of ITestResult from TestListners");
         String methodName = result.getMethod().getMethodName();
-//		String methodName = result.getName();
-        log = extentReporter.createTest(methodName);
+        ExtentTestManager.createTest(methodName);
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        /*System.out.println("This is onTestSuccess of ITestResult from TestListners");
-        System.out.println("ReportPath is " + reportPath);
-        String screenShot = reportPath + "/" + result.getMethod().getMethodName() + ".jpg";
-        System.out.println("ScreenShot file name " + screenShot);
-
-        TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
-        System.out.println("Take screenShot " + takesScreenshot);
-        File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
-        File destinationFile = new File(screenShot);
-
-        try {
-            FileUtils.copyFile(sourceFile, destinationFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // throw new RuntimeException(e);
-        }*/
-        System.out.println("Test pass : " + result.getName());
-
+        System.out.println("This is onTestSuccess of ITestResult from TestListners");
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
-        System.out.println("Test case fail : " + result.getName());
+        System.out.println("This is onTestFailure of ITestResult from TestListeners");
+        ExtentTest test = ExtentTestManager.getTest();
+        test.fail(result.getThrowable());
 
-        /*log.fail(result.getThrowable().getMessage());
-        String screenShotPath = reportPath + "/" + result.getMethod().getMethodName() + ".jpg";
-        log.addScreenCaptureFromPath(screenShotPath, "Failed screenshot");
-//        takeScreenshot(result.getName());
-        captureScreenshot(result, driver, reportPath);*/
-        /*String screenShot = reportPath + "/" + result.getMethod().getMethodName() + ".jpg";
-        TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
-        File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
-        File destinationFile = new File(screenShot);
+        Object testClass = result.getInstance();
+        WebDriver driver = ((BaseClass) testClass).driver;   // public driver access
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"));
 
-        try {
-            FileUtils.copyFile(sourceFile, destinationFile);
-        } catch (IOException e) {
-            // e.printStackTrace(); throw new RuntimeException(e);
-        }*/
+        if (driver != null) {
+            /*// ✅ Fixed screenshot folder
+            String reportPath = System.getProperty("user.dir") + "/reports/screenshots/";
+            File dir = new File(reportPath);
+            if (!dir.exists()) dir.mkdirs();
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
-            File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
-            String screenshotName = result.getName() + "_failure.png";
-            File destinationFile = new File(reportPath+"/screenshots/" + screenshotName);
-            FileUtils.copyFile(sourceFile, destinationFile);
-            System.out.println("Screenshot captured and saved at: " + destinationFile.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Failed to capture screenshot: " + e.getMessage());
-        }
+            // Filename with timestamp
+            String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"));
+            String fileName = result.getMethod().getMethodName() + "_" + timeStamp + ".jpg";
+
+            String screenShotPath = reportPath + fileName;
+
+            try {
+                TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+                File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+                File destinationFile = new File(screenShotPath);
+                FileUtils.copyFile(sourceFile, destinationFile);
+
+                System.out.println("Screenshot captured: " + screenShotPath);
+
+                // ✅ Relative path for HTML report
+                String relativePath = "screenshots/" + fileName;
+
+                // 🔹 Attach screenshot in report
+                test.fail("Failed Step Screenshot:")
+                        .addScreenCaptureFromPath(screenShotPath);*/
+
+            // Put screenshots in the same folder as the HTML report
+            String reportDir = ExtentReportManager.reportPath;
+            String screenShotDir = reportDir + "/screenshots/";
+
+// Ensure folder exists
+            File dir = new File(screenShotDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            String fileName = result.getMethod().getMethodName() + "_" + timeStamp + ".jpg";
+            String screenShotPath = screenShotDir + fileName;
+
+// Save screenshot
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            File sourceFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            File destinationFile = new File(screenShotPath);
+            try {
+                FileUtils.copyFile(sourceFile, destinationFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+// Attach using relative path (works since inside same report folder)
+            test.fail("Failed Step Screenshot:").addScreenCaptureFromPath("screenshots/" + fileName);
+
+
+
+    } else
+
+    {
+        System.out.println("Driver is null, screenshot not captured!");
     }
-
-    @Override
-    public void onTestSkipped(ITestResult result) {
-        System.out.println("This is onTestSkipped of ITestResult from TestListners");
+}
 
 
-    }
-
-
+@Override
+public void onTestSkipped(ITestResult result) {
+    System.out.println("This is onTestSkipped of ITestResult from TestListners");
+}
 }

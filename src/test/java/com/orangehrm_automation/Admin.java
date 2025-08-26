@@ -5,6 +5,7 @@ import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.pages.PIMPage;
 import com.orangehrm_automation.utility.BaseClass;
 import com.orangehrm_automation.utility.PropertyHandling;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
@@ -16,6 +17,7 @@ import java.util.List;
 public class Admin extends BaseClass {
     PropertyHandling propertyHandling;
     AdminPage adminPage;
+    WebDriver driver;
 
     @BeforeClass
     public void beforeClass() {

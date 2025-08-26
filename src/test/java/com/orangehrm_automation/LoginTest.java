@@ -1,13 +1,15 @@
 package com.orangehrm_automation;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.utility.BaseClass;
 import com.orangehrm_automation.utility.PropertyHandling;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.testng.ITestResult;
-import org.testng.annotations.*;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 public class LoginTest extends BaseClass {
     LoginPage loginPage;
@@ -15,44 +17,28 @@ public class LoginTest extends BaseClass {
 
     @BeforeClass
     public void beforeClass() {
-        loginPage = new LoginPage(driver);
+
         properties = new PropertyHandling();
         String browser = properties.getProperties("browser");
-        String url = properties.getProperties("orangeHrmUrl");
-        String username = properties.getProperties("orangeUserName");
-        String password = properties.getProperties("orangeHrmPassword");
         launchBrowser(browser);
+        loginPage = new LoginPage(driver);
+        String url = properties.getProperties("orangeHrmUrl");
         driver.get(url);
-//        loginPage.login(username, password);
-
     }
 
     @AfterClass
     public void afterClass() {
-        driver.close();
+        driver.quit();
     }
 
-    @DataProvider
-    public Object[][] getLoginData() {
-        Object[][] data = new Object[][]{
-//                {"Admin", "admin123"},
-                {"admin", "admin124"},
-//                {"admin123", "admin123"},
-//                {"", ""},
-//                {"", "admin123"},
-//                {"admin", ""}
-        };
-        return data;
-    }
-
-    @Test(dataProvider = "getLoginData")
-    public void verifyLogin(String username, String password) {
-        loginPage = new LoginPage(driver);
-        System.out.println("UN :" + username + ", " + " PWD :" + password);
-
+    @Test(priority = 1)
+    public void loginWithValidCreds() {
+        String username = properties.getProperties("orangeUserName");
+        String password = properties.getProperties("orangeHrmPassword");
+        waitForElementToBeVisible(loginPage.username);
         loginPage.login(username, password);
-
-        WebElement clientBaner = driver.findElement(By.xpath("//img[@alt='client brand banner']"));
+        waitForElementToBeVisible(loginPage.clientBanner);
+        WebElement clientBaner = driver.findElement(loginPage.clientBanner);
         if (clientBaner.isDisplayed()) {
             System.out.println("Landed on home page and signing out");
             loginPage.logOut();
@@ -60,25 +46,9 @@ public class LoginTest extends BaseClass {
         }
     }
 
-    @Test(enabled = false)
-    public void verifyHypLinks() {
-        loginPage = new LoginPage(driver);
-        properties = new PropertyHandling();
-        /*verifyLink(loginPage.linkedInHyp);
-        verifyLink(loginPage.youTubeHyp);
-        verifyLink(loginPage.facebookHyp);
-        verifyLink(loginPage.twitterHyp);*/
-    }
-
-    @Test(enabled = false)
-    public void handle() {
-        click(loginPage.facebookHyp);
-        click(By.xpath("//div[@aria-label='Close']/i"));
-        System.out.println("Current url is " + driver.getCurrentUrl());
-    }
-   /* public Object[][] hypLinkData() {
+    @DataProvider
+    public Object[][] getLoginData() {
         Object[][] data = new Object[][]{
-                {"Admin", "admin123"},
                 {"admin", "admin124"},
                 {"admin123", "admin123"},
                 {"", ""},
@@ -86,7 +56,77 @@ public class LoginTest extends BaseClass {
                 {"admin", ""}
         };
         return data;
-    }*/
+    }
+
+    @Test(dataProvider = "getLoginData",priority = 3)
+    public void verifyLoginWithInvalidCreds(String username, String password) {
+        loginPage = new LoginPage(driver);
+        System.out.println("UN :" + username + ", " + " PWD :" + password);
+        waitForElementToBeVisible(loginPage.username);
+        loginPage.login(username, password);
+        if (username == "" || password == "") {
+            if (username == "") {
+                waitForElementToBeVisible(loginPage.reqMsg);
+                Assert.assertTrue(driver.findElement(loginPage.reqMsg).isDisplayed());
+            } else if (password == "") {
+                waitForElementToBeVisible(loginPage.reqMsg);
+                Assert.assertTrue(driver.findElement(loginPage.reqMsg).isDisplayed());
+            } else {
+                waitForElementToBeVisible(loginPage.reqMsg);
+                Assert.assertTrue(driver.findElement(loginPage.reqMsg).isDisplayed());
+            }
+           /* waitForElementTobeClickable(driver.findElement(loginPage.loginButton));
+
+            Assert.assertTrue(driver.findElement(loginPage.loginButton).isDisplayed());*/
+        } else {
+            waitForElementToBeVisible(loginPage.errMsgForLogin);
+            Assert.assertTrue(driver.findElement(loginPage.errMsgForLogin).isDisplayed());
+
+        }
+        driver.navigate().refresh();
+
+
+        /*waitForElementToBeVisible(loginPage.clientBanner);
+        WebElement clientBaner = driver.findElement(loginPage.clientBanner);
+        if (clientBaner.isDisplayed()) {
+            System.out.println("Landed on home page and signing out");
+            loginPage.logOut();
+            System.out.println("Title is :" + driver.getTitle());
+        }*/
+    }
+
+
+    @Test(dataProvider = "socialLinks",priority = 2)
+    public void verifyHypLinks(By hypLink, By actionElement, String expectedUrl) {
+        String actualUrl = loginPage.handleHypLink(hypLink, actionElement);
+        Assert.assertEquals(actualUrl, expectedUrl, "URL mismatch for: " + expectedUrl);
+    }
+
+    @DataProvider(name = "socialLinks")
+    public Object[][] socialLinks() {
+        return new Object[][]{
+                {loginPage.facebookHyp, By.xpath("//div[@aria-label='Close']/i"), "https://www.facebook.com/OrangeHRM/"},
+                {loginPage.linkedInHyp, null, "https://www.linkedin.com/company/orangehrm"},
+                {loginPage.youTubeHyp, null, "https://www.youtube.com/c/OrangeHRMInc"},
+                {loginPage.twitterHyp, null, "https://x.com/orangehrm?lang=en"}
+        };
+    }
+
+    @Test(priority = 4)
+    public void forgetPassword() {
+        waitForElementToBeVisible(loginPage.forgetPassword);
+        click(loginPage.forgetPassword);
+        waitForElementToBeVisible(loginPage.username);
+        String username = properties.getProperties("orangeUserName");
+        enterText(loginPage.username, username);
+        click(loginPage.loginButton);
+//        String expectedNote="If the email does not arrive, please contact your OrangeHRM Administrator.";
+        String expectedNote = "Note to fail the test case.";
+
+        waitForElementToBeVisible(loginPage.note);
+        String actualNote = driver.findElement(loginPage.note).getText();
+        Assert.assertEquals(expectedNote, actualNote, "Unable to catch note.");
+    }
 
 
 }

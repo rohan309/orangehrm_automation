@@ -8,6 +8,7 @@ import com.orangehrm_automation.pages.PIMPage;
 import com.orangehrm_automation.utility.BaseClass;
 import com.orangehrm_automation.utility.PropertyHandling;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
@@ -23,6 +24,7 @@ public class PIM extends BaseClass {
     PropertyHandling propertyHandling;
     LoginPage loginPage;
     PIMPage pimPage;
+    private WebDriver driver;
 
     @BeforeClass
     @Parameters("browser")

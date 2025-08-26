@@ -25,6 +25,7 @@ public class DashBoard extends BaseClass {
     PropertyHandling propertyHandling;
     DashBoard dashBoard;
     DashBoardPage dashBoardPage;
+    private WebDriver driver;
 
     @BeforeClass
     public void beforeClass() {

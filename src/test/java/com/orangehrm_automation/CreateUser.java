@@ -2,9 +2,11 @@ package com.orangehrm_automation;
 
 import com.orangehrm_automation.utility.BaseClass;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
 public class CreateUser extends BaseClass {
+    private WebDriver driver;
     @Test
     public void createUser(){
         launchBrowser("chrome");

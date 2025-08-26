@@ -3,8 +3,10 @@ package com.orangehrm_automation;
 import com.orangehrm_automation.pages.LeavePage;
 import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.utility.BaseClass;
+
 import com.orangehrm_automation.utility.PropertyHandling;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -15,6 +17,7 @@ public class Leave extends BaseClass {
     PropertyHandling propertyHandling;
     LoginPage loginPage;
     LeavePage leavePage;
+    private WebDriver driver;
 
     @BeforeClass
     public void beforeClass() {

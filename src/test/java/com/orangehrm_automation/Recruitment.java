@@ -4,22 +4,24 @@ import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.pages.RecruitmentPage;
 import com.orangehrm_automation.utility.BaseClass;
 import com.orangehrm_automation.utility.PropertyHandling;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 public class Recruitment extends BaseClass {
     PropertyHandling propertyHandling;
-
+    private WebDriver driver;
     @BeforeClass
     @Parameters("browser")
     public void beforeClass(String browser) {
 
         if (browser.equalsIgnoreCase("chrome")) {
             propertyHandling = new PropertyHandling();
-            launchBrowser(propertyHandling.getProperties("fbrowser"));
+            launchBrowser(propertyHandling.getProperties("browser"));
+
         } else if (browser.equalsIgnoreCase("firefox")) {
             propertyHandling = new PropertyHandling();
-            launchBrowser(propertyHandling.getProperties("ebrowser"));
+            launchBrowser(propertyHandling.getProperties("fbrowser"));
         } /*else {
             propertyHandling = new PropertyHandling();
             launchBrowser(propertyHandling.getProperties("browser"));
