@@ -5,7 +5,6 @@ import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.pages.PIMPage;
 import com.orangehrm_automation.utility.BaseClass;
 import com.orangehrm_automation.utility.PropertyHandling;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
@@ -17,7 +16,7 @@ import java.util.List;
 public class Admin extends BaseClass {
     PropertyHandling propertyHandling;
     AdminPage adminPage;
-    WebDriver driver;
+    String job;
 
     @BeforeClass
     public void beforeClass() {
@@ -25,8 +24,6 @@ public class Admin extends BaseClass {
         propertyHandling = new PropertyHandling();
         launchBrowser(propertyHandling.getProperties("browser"));
         driver.get(propertyHandling.getProperties("orangeHrmUrl"));
-
-
     }
 
     @AfterClass
@@ -42,12 +39,14 @@ public class Admin extends BaseClass {
 
     @AfterMethod
     public void afterMethod() {
-        driver.close();
+//        driver.close();
     }
 
-    @Test(enabled = false)
+    @Test(priority = 1)
     public void corporateBranding() throws InterruptedException {
+        waitForElementToBeVisible(adminPage.adminModule);
         click(adminPage.adminModule);
+        waitForElementToBeVisible(adminPage.corporateBranding);
         click(adminPage.corporateBranding);
         waitForElementToBeVisible(adminPage.corporateBranding);
 
@@ -74,14 +73,16 @@ public class Admin extends BaseClass {
         WebElement src3 = driver.findElement(adminPage.pointer);
         actions.clickAndHold(src3).moveByOffset(-250, -250).release().build().perform();
 
-        scrollToBottom();
+        scrollToElement(adminPage.resetDefault);
+        click(adminPage.resetDefault);
 
         click(adminPage.logoBrowse);
         fileUpload(propertyHandling.getProperties("autoItScript"), propertyHandling.getProperties("clientLogo"));
-
+//        waitForElementToBeVisible(adminPage.bannerBrowse);
         click(adminPage.bannerBrowse);
         fileUpload(propertyHandling.getProperties("autoItScript"), propertyHandling.getProperties("loginBanner"));
 
+        scrollToElement(adminPage.publishBtn);
         click(adminPage.publishBtn);
         waitForElementToBeVisible(adminPage.successMsg);
         Assert.assertTrue(driver.findElement(adminPage.successMsg).isDisplayed());
@@ -89,11 +90,12 @@ public class Admin extends BaseClass {
 
     }
 
-    @Test(enabled = false)
+    @Test(priority = 2)
     public void createJob() {
         propertyHandling = new PropertyHandling();
         click(adminPage.adminModule);
-        dropDown(adminPage.jobSubModule, adminPage.jobValues, propertyHandling.getProperties("jobTitles"));
+        job = propertyHandling.getProperties("jobTitles");
+        dropDown(adminPage.jobSubModule, adminPage.jobValues, job);
         List<WebElement> jobs = driver.findElements(adminPage.jobTable);
         List<String> list = new ArrayList<>();
         String text = null;
@@ -114,25 +116,28 @@ public class Admin extends BaseClass {
 
     }
 
-    @Test(enabled = false)
+    @Test(dependsOnMethods = "createJob")
     public void verifyJob() {
         click(adminPage.adminModule);
         dropDown(adminPage.jobSubModule, adminPage.jobValues, propertyHandling.getProperties("jobTitles"));
         List<WebElement> jobs = driver.findElements(adminPage.jobTable);
+        List<String> jobList=new ArrayList<>();
         for (WebElement ele : jobs) {
             String str = ele.getText();
-            Assert.assertEquals(propertyHandling.getProperties("job"), str);
+            jobList.add(str);
         }
+        Assert.assertTrue(jobList.contains(job));
     }
+
     @Test
     public void skills() {
         click(adminPage.adminModule);
         click(adminPage.qualification);
 
-        List<WebElement> qualificationDropDown=driver.findElements(adminPage.qulificationDropDown);
-        for (WebElement ele:qualificationDropDown) {
+        List<WebElement> qualificationDropDown = driver.findElements(adminPage.qulificationDropDown);
+        for (WebElement ele : qualificationDropDown) {
             System.out.println(ele.getText());
-            if (ele.getText().equalsIgnoreCase(propertyHandling.getProperties("Skills"))){
+            if (ele.getText().equalsIgnoreCase(propertyHandling.getProperties("Skills"))) {
                 ele.click();
                 break;
             }
@@ -143,11 +148,12 @@ public class Admin extends BaseClass {
         enterText(adminPage.skillName, propertyHandling.getProperties("skillName"));
         click(adminPage.saveBtn);
         waitForElementToBeVisible(adminPage.successMsg);
-        Assert.assertTrue(driver.findElement(adminPage.successMsg).isDisplayed(),"Skill not added successfully...");
+        Assert.assertTrue(driver.findElement(adminPage.successMsg).isDisplayed(), "Skill not added successfully...");
     }
-    @Test
+
+    @Test(dependsOnMethods = "skills")
     public void verifySkills() {
-        PIMPage pimPage=new PIMPage(driver);
+        PIMPage pimPage = new PIMPage(driver);
         click(pimPage.pimModule);
         click(pimPage.addBtn);
         waitForElementToBeVisible(pimPage.saveBtn);
@@ -158,20 +164,20 @@ public class Admin extends BaseClass {
         Assert.assertTrue(driver.findElement(pimPage.successMsg).isDisplayed());
 
         waitForElementToBeVisible(pimPage.empImage);
-        scrollToElement(driver,pimPage.salaryTab);
+        scrollToElement(pimPage.salaryTab);
         Assert.assertTrue(driver.findElement(pimPage.salaryTab).isDisplayed());
         waitForElementToBeVisible(pimPage.qualificationTab);
         click(pimPage.qualificationTab);
-        scrollToElement(driver,pimPage.dependents);
+        scrollToElement(pimPage.dependents);
         click(pimPage.addSkill);
         click(pimPage.skillsTextField);
         Assert.assertTrue(driver.findElement(pimPage.skillsTextField).isDisplayed());
         waitForElementToBeVisible(pimPage.skillsDropDown);
-        List<WebElement> elements=driver.findElements(pimPage.skillsDropDown);
-        System.out.println("Elements are "+elements+" Size is : "+elements.size());
-        for (int i =0; i<elements.size();i++) {
+        List<WebElement> elements = driver.findElements(pimPage.skillsDropDown);
+        System.out.println("Elements are " + elements + " Size is : " + elements.size());
+        for (int i = 0; i < elements.size(); i++) {
             if (elements.get(i).getText().equalsIgnoreCase(propertyHandling.getProperties("skillName"))) {
-                System.out.println("Skill is displayed : "+elements.get(i).getText());
+                System.out.println("Skill is displayed : " + elements.get(i).getText());
                 Assert.assertEquals(propertyHandling.getProperties("skillName"), elements.get(i).getText());
                 break;
             }

@@ -24,12 +24,12 @@ public class AdminPage extends BaseClass {
     public By jobSubModule = By.xpath("//aside[@class='oxd-sidepanel']/following-sibling::header/div[2]//li[2]");
     public By jobValues = By.xpath("//ul[@class='oxd-dropdown-menu']/li/a");
     public By addBtn = By.xpath("//div[@class='orangehrm-header-container']//button/i");
-    public By jobTitle=By.xpath("//form[@class='oxd-form']/div[1]//input");
-    public By saveBtn=By.xpath("//div[@class='oxd-form-actions']//button[2]");
-    public By jobTable=By.xpath("//div[@class='oxd-table-body']/div/div/div[2]/div");
-    public By qualification=By.xpath("//header[@class='oxd-topbar']//nav//li[4]//i");
-    public By qulificationDropDown=By.xpath("//header[@class='oxd-topbar']/div[2]/nav/ul/li[4]/ul/li/a");
-    public By skillName=By.xpath("//form[@class='oxd-form']//input");
-
+    public By jobTitle = By.xpath("//form[@class='oxd-form']/div[1]//input");
+    public By saveBtn = By.xpath("//div[@class='oxd-form-actions']//button[2]");
+    public By jobTable = By.xpath("//div[@class='oxd-table-body']/div/div/div[2]/div");
+    public By qualification = By.xpath("//header[@class='oxd-topbar']//nav//li[4]//i");
+    public By qulificationDropDown = By.xpath("//header[@class='oxd-topbar']/div[2]/nav/ul/li[4]/ul/li/a");
+    public By skillName = By.xpath("//form[@class='oxd-form']//input");
+    public By resetDefault = By.xpath("//button[text()=' Reset to Default ']");
 
 }
