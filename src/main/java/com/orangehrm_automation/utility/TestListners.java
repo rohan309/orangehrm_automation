@@ -59,44 +59,15 @@ public class TestListners implements ITestListener, ISuiteListener {
         String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"));
 
         if (driver != null) {
-            /*// ✅ Fixed screenshot folder
-            String reportPath = System.getProperty("user.dir") + "/reports/screenshots/";
-            File dir = new File(reportPath);
-            if (!dir.exists()) dir.mkdirs();
-
-            // Filename with timestamp
-            String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"));
-            String fileName = result.getMethod().getMethodName() + "_" + timeStamp + ".jpg";
-
-            String screenShotPath = reportPath + fileName;
-
-            try {
-                TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
-                File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
-                File destinationFile = new File(screenShotPath);
-                FileUtils.copyFile(sourceFile, destinationFile);
-
-                System.out.println("Screenshot captured: " + screenShotPath);
-
-                // ✅ Relative path for HTML report
-                String relativePath = "screenshots/" + fileName;
-
-                // 🔹 Attach screenshot in report
-                test.fail("Failed Step Screenshot:")
-                        .addScreenCaptureFromPath(screenShotPath);*/
-
-            // Put screenshots in the same folder as the HTML report
             String reportDir = ExtentReportManager.reportPath;
             String screenShotDir = reportDir + "/screenshots/";
 
-// Ensure folder exists
             File dir = new File(screenShotDir);
             if (!dir.exists()) dir.mkdirs();
 
             String fileName = result.getMethod().getMethodName() + "_" + timeStamp + ".jpg";
             String screenShotPath = screenShotDir + fileName;
 
-// Save screenshot
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -110,21 +81,17 @@ public class TestListners implements ITestListener, ISuiteListener {
                 throw new RuntimeException(e);
             }
 
-// Attach using relative path (works since inside same report folder)
             test.fail("Failed Step Screenshot:").addScreenCaptureFromPath("screenshots/" + fileName);
 
 
-
-    } else
-
-    {
-        System.out.println("Driver is null, screenshot not captured!");
+        } else {
+            System.out.println("Driver is null, screenshot not captured!");
+        }
     }
-}
 
 
-@Override
-public void onTestSkipped(ITestResult result) {
-    System.out.println("This is onTestSkipped of ITestResult from TestListners");
-}
+    @Override
+    public void onTestSkipped(ITestResult result) {
+        System.out.println("This is onTestSkipped of ITestResult from TestListners");
+    }
 }

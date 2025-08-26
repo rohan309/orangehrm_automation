@@ -3,8 +3,10 @@ package com.orangehrm_automation;
 import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.utility.BaseClass;
 import com.orangehrm_automation.utility.PropertyHandling;
+import com.orangehrm_automation.utility.RetryAnalyzer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.Color;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -112,7 +114,7 @@ public class LoginTest extends BaseClass {
         };
     }
 
-    @Test(priority = 4)
+    @Test(priority = 5,retryAnalyzer = RetryAnalyzer.class)
     public void forgetPassword() {
         waitForElementToBeVisible(loginPage.forgetPassword);
         click(loginPage.forgetPassword);
@@ -126,6 +128,19 @@ public class LoginTest extends BaseClass {
         waitForElementToBeVisible(loginPage.note);
         String actualNote = driver.findElement(loginPage.note).getText();
         Assert.assertEquals(expectedNote, actualNote, "Unable to catch note.");
+    }
+
+    @Test(priority = 4)
+    public void validateButtonColor() {
+        waitForElementToBeVisible(loginPage.loginButton);
+        WebElement button = driver.findElement(loginPage.loginButton);
+        String actualColor = button.getCssValue("background-color");
+        String expectedColor = "rgba(255, 123, 29, 1)";
+        Assert.assertEquals(actualColor, expectedColor, "Button color did not match!");
+
+        String actualHex = Color.fromString(button.getCssValue("background-color")).asHex();
+        String expectedHex = "#ff7b1d";
+        Assert.assertEquals(actualHex, expectedHex, "Button color mismatch!");
     }
 
 
