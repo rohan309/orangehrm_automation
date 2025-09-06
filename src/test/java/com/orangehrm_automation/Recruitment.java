@@ -58,7 +58,7 @@ public class Recruitment extends BaseClass {
         selectFromDropDown(recruitmentPage.valuesInDropDown);
         enterText(recruitmentPage.emailTextField, propertyHandling.getProperties("emailID"));
         click(recruitmentPage.resumeUpload);
-        fileUpload(propertyHandling.getProperties("autoItScript"), propertyHandling.getProperties("resumeFile"));
+        fileUpload(propertyHandling.getProperties("resumeFile"));
         scrollToElement(recruitmentPage.saveButton);
         click(recruitmentPage.saveButton);
 

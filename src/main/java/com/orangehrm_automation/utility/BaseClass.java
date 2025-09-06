@@ -19,26 +19,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseClass {
-    public WebDriver driver;
+public class BaseClass {
+    protected WebDriver driver;
+    private static ThreadLocal<WebDriver> threadLocal = new ThreadLocal<>();
 
     public void launchBrowser(String browser) {
+        WebDriver webDriver;
 
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                driver = new ChromeDriver(setChromeOptions());
-                break;
-            case "edge":
-                driver = new EdgeDriver(setEdgeOptions());
-                break;
-            case "firefox":
-                driver = new FirefoxDriver(setFirefoxOptions());
-                break;
-            default:
-                driver = new ChromeDriver(setChromeOptions());
+        if (browser != null && !browser.isEmpty()) {
+            switch (browser.toLowerCase()) {
+                case "chrome":
+                    webDriver = new ChromeDriver(setChromeOptions());
+                    break;
+                case "edge":
+                    webDriver = new EdgeDriver(setEdgeOptions());
+                    break;
+                case "firefox":
+                    webDriver = new FirefoxDriver(setFirefoxOptions());
+                    break;
+                default:
+                    webDriver = new ChromeDriver(setChromeOptions());
+            }
+        } else {
+            webDriver = new ChromeDriver(setChromeOptions());
         }
 
+        threadLocal.set(webDriver);
+        driver = webDriver;
         System.out.println("Driver launched successfully: " + browser);
+    }
+
+    public static WebDriver getDriver() {
+        return threadLocal.get();
+    }
+
+    public static void quitDriver() {
+        WebDriver driver = threadLocal.get();
+        if (driver != null) {
+            driver.quit();
+            threadLocal.remove();
+        }
     }
 
     public ChromeOptions setChromeOptions() {
@@ -92,7 +112,7 @@ public abstract class BaseClass {
     }
 
     public void waitForElementTobeClickable(By by) {
-        WebElement element=driver.findElement(by);
+        WebElement element = driver.findElement(by);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
@@ -100,6 +120,13 @@ public abstract class BaseClass {
     public void waitForElementToBeVisible(By element) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOfElementLocated(element));
+    }
+
+    public void waitForElementToRefresh(By by) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.refreshed(
+                ExpectedConditions.visibilityOfElementLocated(by)
+        ));
     }
 
     public void scroll(int scrollBy) {
@@ -165,12 +192,14 @@ public abstract class BaseClass {
         }
     }
 
-    public void fileUpload(String autoItScript, String filePath) {
+    public void fileUpload(String filePath) {
+        PropertyHandling propertyHandling = new PropertyHandling();
+        String autoItScript = propertyHandling.getProperties("autoItScript");
         String file = filePath;
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
             Runtime.getRuntime().exec(autoItScript + " " + file);
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (Exception e) {
             e.printStackTrace();
         }

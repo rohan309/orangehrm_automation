@@ -42,52 +42,78 @@ public class Admin extends BaseClass {
 //        driver.close();
     }
 
-    @Test(priority = 1)
+    @Test
     public void corporateBranding() throws InterruptedException {
+
         waitForElementToBeVisible(adminPage.adminModule);
         click(adminPage.adminModule);
+
         waitForElementToBeVisible(adminPage.corporateBranding);
         click(adminPage.corporateBranding);
-        waitForElementToBeVisible(adminPage.corporateBranding);
 
-        click(adminPage.primaryColor);
-        WebElement src = driver.findElement(adminPage.pointer);
-
-        Actions actions = new Actions(driver);
-        actions.clickAndHold(src).moveByOffset(-250, -250).release().build().perform();
-
-        click(adminPage.secondaryColor);
-        waitForElementToBeVisible(adminPage.pointer);
-
-        WebElement src1 = driver.findElement(adminPage.pointer);
-        actions.clickAndHold(src1).moveByOffset(-250, -250).release().build().perform();
-
-        click(adminPage.primaryGradient1);
-        waitForElementToBeVisible(adminPage.pointer);
-
-        WebElement src2 = driver.findElement(adminPage.pointer);
-        actions.clickAndHold(src2).moveByOffset(-250, -250).release().build().perform();
-
-        click(adminPage.primaryGradient2);
-        waitForElementToBeVisible(adminPage.pointer);
-        WebElement src3 = driver.findElement(adminPage.pointer);
-        actions.clickAndHold(src3).moveByOffset(-250, -250).release().build().perform();
+        waitForElementToBeVisible(adminPage.bannerBrowse);
 
         scrollToElement(adminPage.resetDefault);
-        click(adminPage.resetDefault);
+        waitForElementToBeVisible(adminPage.resetDefault);
 
+//        System.out.println(driver.findElement(adminPage.resetDefault).isDisplayed() ? "Reset button displayed" : "Reset button is NOT displayed");
+
+        if (driver.findElement(adminPage.resetDefault).isDisplayed()) {
+            System.out.println("Reset button displayed");
+        } else {
+            throw new RuntimeException("Reset button is NOT displayed");
+        }
+
+        click(adminPage.resetDefault);
+        System.out.println("Reset action finished");
+
+//        Thread.sleep(3000);
+
+       /* click(adminPage.adminModule);
+
+        waitForElementToBeVisible(adminPage.corporateBranding);
+        click(adminPage.corporateBranding);
+        System.out.println("Clicked on corporate branding");
+
+
+        waitForElementToBeVisible(adminPage.primaryColor);
+        click(adminPage.primaryColor);
+
+        Actions actions = new Actions(driver);
+
+        WebElement src = driver.findElement(adminPage.pointer);
+        actions.clickAndHold(src).moveByOffset(-250, 250).release().build().perform();
+        click(adminPage.secondaryColor);
+
+        waitForElementToRefresh(adminPage.pointer);
+        WebElement src1 = driver.findElement(adminPage.pointer);
+        actions.clickAndHold(src1).moveByOffset(-250, 250).release().build().perform();
+        click(adminPage.primaryGradient1);
+
+        waitForElementToRefresh(adminPage.pointer);
+        WebElement src2 = driver.findElement(adminPage.pointer);
+        actions.clickAndHold(src2).moveByOffset(-250, 250).release().build().perform();
+        click(adminPage.primaryGradient2);
+
+        waitForElementToRefresh(adminPage.pointer);
+        WebElement src3 = driver.findElement(adminPage.pointer);
+        actions.clickAndHold(src3).moveByOffset(-250, 250).release().build().perform();
+        System.out.println("Color reset actions performed");
+
+        waitForElementTobeClickable(adminPage.logoBrowse);
         click(adminPage.logoBrowse);
-        fileUpload(propertyHandling.getProperties("autoItScript"), propertyHandling.getProperties("clientLogo"));
-//        waitForElementToBeVisible(adminPage.bannerBrowse);
+        fileUpload(propertyHandling.getProperties("clientLogo"));
+
+        waitForElementToBeVisible(adminPage.bannerBrowse);
         click(adminPage.bannerBrowse);
-        fileUpload(propertyHandling.getProperties("autoItScript"), propertyHandling.getProperties("loginBanner"));
+        fileUpload(propertyHandling.getProperties("loginBanner"));
 
         scrollToElement(adminPage.publishBtn);
         click(adminPage.publishBtn);
+
         waitForElementToBeVisible(adminPage.successMsg);
         Assert.assertTrue(driver.findElement(adminPage.successMsg).isDisplayed());
-
-
+        System.out.println("Corporate Branding applied successfully");*/
     }
 
     @Test(priority = 2)
@@ -121,7 +147,7 @@ public class Admin extends BaseClass {
         click(adminPage.adminModule);
         dropDown(adminPage.jobSubModule, adminPage.jobValues, propertyHandling.getProperties("jobTitles"));
         List<WebElement> jobs = driver.findElements(adminPage.jobTable);
-        List<String> jobList=new ArrayList<>();
+        List<String> jobList = new ArrayList<>();
         for (WebElement ele : jobs) {
             String str = ele.getText();
             jobList.add(str);

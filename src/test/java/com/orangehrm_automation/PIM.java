@@ -66,7 +66,7 @@ public class PIM extends BaseClass {
         click(pimPage.dataImport);
         click(pimPage.browseBtn);
         String csvFile = propertyHandling.getProperties("csvFile");
-        fileUpload(propertyHandling.getProperties("autoItScript"), csvFile);
+        fileUpload(csvFile);
         click(pimPage.uploadBtn);
         click(pimPage.okBtn);
     }
@@ -140,7 +140,7 @@ public class PIM extends BaseClass {
         click(pimPage.dataImport);
         click(pimPage.browseBtn);
 
-        fileUpload(propertyHandling.getProperties("autoItScript"), propertyHandling.getProperties("screenShot"));
+        fileUpload(propertyHandling.getProperties("screenShot"));
         WebElement errMsg = driver.findElement(pimPage.fileUpErrMsg);
         Assert.assertTrue(errMsg.isDisplayed());
 
