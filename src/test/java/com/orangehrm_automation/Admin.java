@@ -18,11 +18,13 @@ public class Admin extends BaseClass {
     AdminPage adminPage;
     String job;
 
+    @Parameters("browser")
     @BeforeClass
-    public void beforeClass() {
+    public void beforeClass(@Optional("chrome") String browser) {
         adminPage = new AdminPage(driver);
         propertyHandling = new PropertyHandling();
-        launchBrowser(propertyHandling.getProperties("browser"));
+//        String browser=propertyHandling.getProperties("browser");
+        launchBrowser(browser);
         driver.get(propertyHandling.getProperties("orangeHrmUrl"));
     }
 
@@ -68,8 +70,9 @@ public class Admin extends BaseClass {
         System.out.println("Reset action finished");
 
 //        Thread.sleep(3000);
+        driver.navigate().refresh();
 
-       /* click(adminPage.adminModule);
+        click(adminPage.adminModule);
 
         waitForElementToBeVisible(adminPage.corporateBranding);
         click(adminPage.corporateBranding);
@@ -81,30 +84,49 @@ public class Admin extends BaseClass {
 
         Actions actions = new Actions(driver);
 
+        WebElement pointer = driver.findElement(adminPage.pointer);
+        int width = pointer.getSize().getWidth();
+        int height = pointer.getSize().getHeight();
+        int safeOffsetX = Math.max(-width / 2, -10);
+        int safeOffsetY = Math.max(height / 2, 10);
+
         WebElement src = driver.findElement(adminPage.pointer);
-        actions.clickAndHold(src).moveByOffset(-250, 250).release().build().perform();
+//        actions.clickAndHold(src).moveByOffset(-250, 250).release().build().perform();
+        actions.clickAndHold(src).moveByOffset(safeOffsetX, safeOffsetY).release().build().perform();
+
         click(adminPage.secondaryColor);
 
         waitForElementToRefresh(adminPage.pointer);
         WebElement src1 = driver.findElement(adminPage.pointer);
-        actions.clickAndHold(src1).moveByOffset(-250, 250).release().build().perform();
+//        actions.clickAndHold(src1).moveByOffset(-250, 250).release().build().perform();
+        actions.clickAndHold(src1).moveByOffset(safeOffsetX, safeOffsetY).release().build().perform();
+
         click(adminPage.primaryGradient1);
 
         waitForElementToRefresh(adminPage.pointer);
         WebElement src2 = driver.findElement(adminPage.pointer);
-        actions.clickAndHold(src2).moveByOffset(-250, 250).release().build().perform();
+//        actions.clickAndHold(src2).moveByOffset(-250, 250).release().build().perform();
+        actions.clickAndHold(src2).moveByOffset(safeOffsetX, safeOffsetY).release().build().perform();
+
         click(adminPage.primaryGradient2);
 
         waitForElementToRefresh(adminPage.pointer);
         WebElement src3 = driver.findElement(adminPage.pointer);
-        actions.clickAndHold(src3).moveByOffset(-250, 250).release().build().perform();
-        System.out.println("Color reset actions performed");
+//        actions.clickAndHold(src3).moveByOffset(-250, 250).release().build().perform();
+        actions.clickAndHold(src3).moveByOffset(safeOffsetX, safeOffsetY).release().build().perform();
 
-        waitForElementTobeClickable(adminPage.logoBrowse);
+        System.out.println("Color reset actions performed");
+        LoginPage loginPage=new LoginPage(driver);
+//        click(loginPage.profileName);
+//        Thread.sleep(5000);
+        scrollToElement(adminPage.logoBrowse);
+//        Thread.sleep(3000);
+
+        waitForElementToBeVisible(adminPage.logoBrowse);
         click(adminPage.logoBrowse);
         fileUpload(propertyHandling.getProperties("clientLogo"));
 
-        waitForElementToBeVisible(adminPage.bannerBrowse);
+//        waitForElementToBeVisible(adminPage.bannerBrowse);
         click(adminPage.bannerBrowse);
         fileUpload(propertyHandling.getProperties("loginBanner"));
 
@@ -113,12 +135,11 @@ public class Admin extends BaseClass {
 
         waitForElementToBeVisible(adminPage.successMsg);
         Assert.assertTrue(driver.findElement(adminPage.successMsg).isDisplayed());
-        System.out.println("Corporate Branding applied successfully");*/
+        System.out.println("Corporate Branding applied successfully");
     }
 
     @Test(priority = 2)
     public void createJob() {
-        propertyHandling = new PropertyHandling();
         click(adminPage.adminModule);
         job = propertyHandling.getProperties("jobTitles");
         dropDown(adminPage.jobSubModule, adminPage.jobValues, job);

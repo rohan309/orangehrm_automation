@@ -57,6 +57,17 @@ public class PIMPage extends BaseClass {
     public By skillsDropDown = By.xpath("//div[@role='listbox']/div/span");
     public By salaryTab = By.xpath("//a[text()='Salary']");
     public By dependents = By.xpath("//a[text()='Dependents']");
-
-
+    public By USERNAME = By.name("username");
+    public By PASSWORD = By.name("password");
+    public By LOGIN_BUTTON = By.xpath("//button[@type='submit']");
+    public By PIM_MENU = By.xpath("//a[@class='oxd-main-menu-item active']");
+    public By ADD_BUTTON = By.xpath("//div[@class='orangehrm-paper-container']/div/button/i");
+    public By FIRST_NAME = By.name("firstName");
+    public By LAST_NAME = By.name("lastName");
+    public By toggleSwitch = By.xpath("//span[@class='oxd-switch-input oxd-switch-input--active --label-right']");
+    public By USERNAME_INPUT = By.xpath("//div[@class='orangehrm-employee-form']/div[3]/div/div[1]/div/div[2]/input");
+    public By PASSWORD_INPUT = By.xpath("//div[@id='app']/div[1]/div[2]/div[2]/div/div/form/div[1]/div[2]/div[4]/div/div[1]/div/div[2]/input");
+    public By CONFIRM_PASSWORD_INPUT = By.xpath("//div[@id='app']/div[1]/div[2]/div[2]/div/div/form/div[1]/div[2]/div[4]/div/div[2]/div/div[2]/input");
+    public By SUBMIT_BUTTON = By.xpath("//button[@type='submit']");
+    public By addEmployee=By.xpath("//a[normalize-space()='Add Employee']");
 }
