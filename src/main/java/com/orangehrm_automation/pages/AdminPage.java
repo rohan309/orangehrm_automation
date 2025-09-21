@@ -17,7 +17,8 @@ public class AdminPage extends BaseClass {
     public By primaryGradient2 = By.xpath("//label[text()='Primary Gradient Color 2']/following-sibling::div");
     public By pointer = By.xpath("//canvas[@class='oxd-color-picker-palette']//preceding-sibling::div");
     public By corporateBrndText = By.xpath("//div[@class='orangehrm-card-container']/h6");
-    public By logoBrowse = By.xpath("//label[text()='Client Logo']/parent::div/following-sibling::div//div[@class='oxd-file-button']");
+//    public By logoBrowse = By.xpath("//label[text()='Client Logo']/parent::div/following-sibling::div//div[@class='oxd-file-button']");
+    public By logoBrowse=By.xpath("//label[text()='Client Logo']/parent::div/following-sibling::div");
     public By bannerBrowse = By.xpath("//label[text()='Login Banner']/parent::div/following-sibling::div//div[@class='oxd-file-button']");
     public By publishBtn = By.xpath("//div[@class='orangehrm-actions-group']/button[3]");
     public By successMsg = By.xpath("//p[text()='Successfully Saved']");

@@ -24,23 +24,15 @@ public class PIM extends BaseClass {
     PropertyHandling propertyHandling;
     LoginPage loginPage;
     PIMPage pimPage;
-    private WebDriver driver;
 
     @BeforeClass
-    @Parameters("browser")
-    public void beforeClass(String browser) {
-        if (browser.equalsIgnoreCase("chrome")) {
-            propertyHandling = new PropertyHandling();
-            launchBrowser(propertyHandling.getProperties("browser"));
-        } else if (browser.equalsIgnoreCase("firefox")) {
-            propertyHandling = new PropertyHandling();
-            launchBrowser(propertyHandling.getProperties("fbrowser"));
-        }/*else {
-            propertyHandling = new PropertyHandling();
-            launchBrowser(propertyHandling.getProperties("browser"));
-        }*/
+    public void beforeClass() {
+        propertyHandling = new PropertyHandling();
+        launchBrowser("chrome");
+        pimPage = new PIMPage(driver);
         driver.get(propertyHandling.getProperties("orangeHrmUrl"));
     }
+
 
     @AfterClass
     public void afterClass() {
@@ -54,8 +46,7 @@ public class PIM extends BaseClass {
     }
 
     @AfterMethod
-    public void afterMethod() throws InterruptedException {
-//        driver.close();
+    public void afterMethod() {
     }
 
     @Test
@@ -267,7 +258,7 @@ public class PIM extends BaseClass {
 
     }
 
-    @Test(enabled = false,dependsOnMethods = "addReports")
+    @Test(enabled = false, dependsOnMethods = "addReports")
     public void verifyReport() throws InterruptedException {
         pimPage = new PIMPage(driver);
         propertyHandling = new PropertyHandling();
@@ -285,6 +276,26 @@ public class PIM extends BaseClass {
         String report = driver.findElement(pimPage.reoprtFound).getText();
         System.out.println(report);
         Assert.assertEquals(report, propertyHandling.getProperties("reportName"));
+    }
+
+    @Test
+    public void createUser() {
+        click(pimPage.pimModule);
+        click(pimPage.addEmployee);
+        enterText(pimPage.FIRST_NAME, "JP");
+        enterText(pimPage.LAST_NAME, "Morgan");
+        click(pimPage.toggleSwitch);
+        waitForElementToBeVisible(pimPage.USERNAME_INPUT);
+        enterText(pimPage.USERNAME_INPUT, "JPMorgan");
+        driver.findElement(pimPage.PASSWORD_INPUT).clear();
+        enterText(pimPage.PASSWORD_INPUT, "JPMorgan@123");
+        enterText(pimPage.CONFIRM_PASSWORD_INPUT, "JPMorgan@123");
+        waitForElementTobeClickable(pimPage.SUBMIT_BUTTON);
+        click(pimPage.SUBMIT_BUTTON);
+        String expectedMsg="Successfully Saved";
+        waitForElementToBeVisible(pimPage.successMsg);
+        String actualMsg=driver.findElement(pimPage.successMsg).getText();
+        Assert.assertEquals(actualMsg,expectedMsg);
     }
 
 

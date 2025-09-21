@@ -8,20 +8,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 public class LoginTest extends BaseClass {
     LoginPage loginPage;
     PropertyHandling properties;
 
+    @Parameters("browser")
     @BeforeClass
-    public void beforeClass() {
+    public void beforeClass(@Optional("chrome") String browser) {
 
         properties = new PropertyHandling();
-        String browser = properties.getProperties("browser");
+//        String browser = properties.getProperties("browser");
         launchBrowser(browser);
         loginPage = new LoginPage(driver);
         String url = properties.getProperties("orangeHrmUrl");
@@ -97,7 +95,6 @@ public class LoginTest extends BaseClass {
         }*/
     }
 
-
     @Test(dataProvider = "socialLinks",priority = 2)
     public void verifyHypLinks(By hypLink, By actionElement, String expectedUrl) {
         String actualUrl = loginPage.handleHypLink(hypLink, actionElement);
@@ -133,6 +130,7 @@ public class LoginTest extends BaseClass {
     @Test(priority = 4)
     public void validateButtonColor() {
         waitForElementToBeVisible(loginPage.loginButton);
+        Assert.assertTrue(driver.findElement(loginPage.loginButton).isDisplayed());
         WebElement button = driver.findElement(loginPage.loginButton);
         String actualColor = button.getCssValue("background-color");
         String expectedColor = "rgba(255, 123, 29, 1)";

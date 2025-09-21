@@ -7,8 +7,15 @@
         </listener>
     </listeners>
 
-    <test name="Sample_Test1" parallel="classes" thread-count="2">
+    <test name="Test on Chrome" parallel="classes" thread-count="2">
         <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.orangehrm_automation.LoginTest"/>
+        </classes>
+    </test>
+
+    <test name="Test on Edge" parallel="classes" thread-count="2">
+        <parameter name="browser" value="edge"/>
         <classes>
             <class name="com.orangehrm_automation.LoginTest"/>
         </classes>
