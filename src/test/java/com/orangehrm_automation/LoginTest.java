@@ -53,7 +53,8 @@ public class LoginTest extends BaseClass {
             loginPage.logOut();
             System.out.println("Title is :" + driver.getTitle());
         }
-        Assert.assertTrue(clientBaner.isDisplayed());
+        waitForElementToBeVisible(loginPage.username);
+        Assert.assertTrue(driver.findElement(loginPage.username).isDisplayed());
     }
 
    /* @DataProvider
