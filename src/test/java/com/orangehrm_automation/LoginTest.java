@@ -43,7 +43,7 @@ public class LoginTest extends BaseClass {
     @Test(priority = 1)
     public void loginWithValidCreds() {
         String username = properties.getProperties("orangeUserName");
-        String password = properties.getProperties("orangeHrmPasswordn");
+        String password = properties.getProperties("orangeHrmPassword");
         waitForElementToBeVisible(loginPage.username);
         loginPage.login(username, password);
         waitForElementToBeVisible(loginPage.clientBanner);
