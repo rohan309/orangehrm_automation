@@ -1,14 +1,9 @@
 package com.orangehrm_automation;
 
-import com.orangehrm_automation.pages.DashBoardPage;
 import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.utility.BaseClass;
-import com.orangehrm_automation.utility.BaseTest;
 import com.orangehrm_automation.utility.PropertyHandling;
-import com.orangehrm_automation.utility.RetryAnalyzer;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.Color;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
