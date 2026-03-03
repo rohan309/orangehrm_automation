@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ExtentReportManager {
+
     public static String reportPath;
     public static ExtentReports extentReporter;
 
@@ -21,22 +22,25 @@ public class ExtentReportManager {
 
 
     public static void setReportDetails() {
+
         LocalDateTime dateTime = LocalDateTime.now();
         String currentDateTime = dateTime.format(DateTimeFormatter.ofPattern("dd_mm_yyyy_HH_mm"));
-        reportPath = System.getProperty("user.dir") + "/reports/" + "report_" + currentDateTime;
+        reportPath = System.getProperty("user.dir") + "/reports/";
         System.out.println("ReportPath is " + reportPath);
+
         File file = new File(reportPath);
         if (!file.exists()) {
             file.mkdir();
         }
 
-        String htmlReport = reportPath + "/AutomationReport.html";
+        String htmlReport = reportPath + "/AutomationReport_"+currentDateTime+".html";
         ExtentSparkReporter sparkReporter = new ExtentSparkReporter(htmlReport);
         extentReporter = new ExtentReports();
         extentReporter.attachReporter(sparkReporter);
         extentReporter.setSystemInfo("user", "Rohan More");
         extentReporter.setSystemInfo("os", "windows");
         extentReporter.setSystemInfo("environment", "QA");
+
     }
 
 }

@@ -56,7 +56,7 @@ public class TestListners implements ITestListener, ISuiteListener {
 
         Object testClass = result.getInstance();
         WebDriver driver = ((BaseClass) testClass).driver;   // public driver access
-        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"));
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm"));
 
         if (driver != null) {
             String reportDir = ExtentReportManager.reportPath;
@@ -82,6 +82,7 @@ public class TestListners implements ITestListener, ISuiteListener {
             }
 
             test.fail("Failed Step Screenshot:").addScreenCaptureFromPath("screenshots/" + fileName);
+
 
 
         } else {

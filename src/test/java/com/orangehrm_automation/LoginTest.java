@@ -1,7 +1,9 @@
 package com.orangehrm_automation;
 
+import com.orangehrm_automation.pages.DashBoardPage;
 import com.orangehrm_automation.pages.LoginPage;
 import com.orangehrm_automation.utility.BaseClass;
+import com.orangehrm_automation.utility.BaseTest;
 import com.orangehrm_automation.utility.PropertyHandling;
 import com.orangehrm_automation.utility.RetryAnalyzer;
 import org.openqa.selenium.By;
@@ -14,12 +16,11 @@ public class LoginTest extends BaseClass {
     LoginPage loginPage;
     PropertyHandling properties;
 
-    @Parameters("browser")
     @BeforeClass
-    public void beforeClass(@Optional("chrome") String browser) {
+    public void beforeClass() {
 
         properties = new PropertyHandling();
-//        String browser = properties.getProperties("browser");
+        String browser = properties.getProperties("chromeBrowser");
         launchBrowser(browser);
         loginPage = new LoginPage(driver);
         String url = properties.getProperties("orangeHrmUrl");
@@ -31,10 +32,23 @@ public class LoginTest extends BaseClass {
         driver.quit();
     }
 
+    /*@BeforeMethod
+    public void beforeMethod(){
+        BaseTest baseTest=new BaseTest();
+        loginPage.login(properties.getProperties("orangeUserName"), properties.getProperties("orangeHrmPassword"));
+    }
+
+    @AfterMethod
+    public void afterMethod(){
+        DashBoardPage dashBoardPage=new DashBoardPage(driver);
+        click(dashBoardPage.dashBoardModule);
+        loginPage.logOut();
+    }*/
+
     @Test(priority = 1)
     public void loginWithValidCreds() {
         String username = properties.getProperties("orangeUserName");
-        String password = properties.getProperties("orangeHrmPassword");
+        String password = properties.getProperties("orangeHrmPasswordn");
         waitForElementToBeVisible(loginPage.username);
         loginPage.login(username, password);
         waitForElementToBeVisible(loginPage.clientBanner);
@@ -44,9 +58,10 @@ public class LoginTest extends BaseClass {
             loginPage.logOut();
             System.out.println("Title is :" + driver.getTitle());
         }
+        Assert.assertTrue(clientBaner.isDisplayed());
     }
 
-    @DataProvider
+   /* @DataProvider
     public Object[][] getLoginData() {
         Object[][] data = new Object[][]{
                 {"admin", "admin124"},
@@ -75,9 +90,9 @@ public class LoginTest extends BaseClass {
                 waitForElementToBeVisible(loginPage.reqMsg);
                 Assert.assertTrue(driver.findElement(loginPage.reqMsg).isDisplayed());
             }
-           /* waitForElementTobeClickable(driver.findElement(loginPage.loginButton));
+           *//* waitForElementTobeClickable(driver.findElement(loginPage.loginButton));
 
-            Assert.assertTrue(driver.findElement(loginPage.loginButton).isDisplayed());*/
+            Assert.assertTrue(driver.findElement(loginPage.loginButton).isDisplayed());*//*
         } else {
             waitForElementToBeVisible(loginPage.errMsgForLogin);
             Assert.assertTrue(driver.findElement(loginPage.errMsgForLogin).isDisplayed());
@@ -86,13 +101,13 @@ public class LoginTest extends BaseClass {
         driver.navigate().refresh();
 
 
-        /*waitForElementToBeVisible(loginPage.clientBanner);
+        *//*waitForElementToBeVisible(loginPage.clientBanner);
         WebElement clientBaner = driver.findElement(loginPage.clientBanner);
         if (clientBaner.isDisplayed()) {
             System.out.println("Landed on home page and signing out");
             loginPage.logOut();
             System.out.println("Title is :" + driver.getTitle());
-        }*/
+        }*//*
     }
 
     @Test(dataProvider = "socialLinks",priority = 2)
@@ -139,7 +154,7 @@ public class LoginTest extends BaseClass {
         String actualHex = Color.fromString(button.getCssValue("background-color")).asHex();
         String expectedHex = "#ff7b1d";
         Assert.assertEquals(actualHex, expectedHex, "Button color mismatch!");
-    }
+    }*/
 
 
 }

@@ -15,11 +15,12 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+        <!-- Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.35.0</version>
+            <version>4.41.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -86,10 +87,12 @@
             <version>1.4</version>
         </dependency>
 
+        <!-- Source: https://mvnrepository.com/artifact/com.aventstack/extentreports -->
         <dependency>
             <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
-            <version>5.0.9</version>
+            <version>5.1.2</version>
+<!--            <scope>compile</scope>-->
         </dependency>
 
         <dependency>
